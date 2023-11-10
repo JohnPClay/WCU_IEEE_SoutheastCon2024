@@ -1,7 +1,6 @@
 
 
 
-
 void line_Follow() { 
 
   
@@ -115,17 +114,23 @@ while (mySensorBar.getPosition() >= -25 and mySensorBar.getPosition() <= 25){
   delay(5000);
 }
 
-//int d = ;//the diameter of the wheel
 
-void DC_Motor_Encoder(){
-  int b = digitalRead(ENCB);
-  if(b > 0){
-    Count_pulses++;
-  }
-  else{
-    Count_pulses--;
-  }
+void DC_Motor_Encoder1(){
+
+
+    Count_pulses1++;
+    
+    Serial.println(Count_pulses1);
+//  Serial.println(Count_pulses1 + Count_pulses2);
 }
+//void DC_Motor_Encoder2(){
+//
+//
+//    Count_pulses2++;
+//    
+//
+//  Serial.println(Count_pulses1+Count_pulses2);
+//}
 
 
 
@@ -134,12 +139,13 @@ void turnLeft(float motor_Speed, float turn_Degrees) {
   analogWrite(left_Motor_Enable, motor_Speed);
   analogWrite(right_Motor_Enable, motor_Speed);
   
- Count_pulses = 0;
+ Count_pulses1 = 0;
+  Count_pulses2 = 0;
  
-int pulses = 32*(turn_Degrees/360);//16 is the number of pulses in a full rotaion when using botht he rising and falling of ENCA
+int pulses = 30*16*(turn_Degrees/360);//16 is the number of pulses in a full rotaion when using the rising edge of ENCA
 
- 
- while(abs(Count_pulses) < pulses){ //comparing the number of pulses since the wheel started turning to the number of pulses needed to turn
+ //while(abs(Count_pulses1 + Count_pulses2) < pulses)
+ while(abs(Count_pulses1) < pulses){ //comparing the number of pulses since the wheel started turning to the number of pulses needed to turn
   
   digitalWrite(left_Motor_S1, HIGH);
   digitalWrite(left_Motor_S2, LOW);
@@ -180,4 +186,12 @@ void zipline(){
   //this will be the code for the zipline/canyon 
 
   
+}
+
+void spin(){ //will spin the sign. it is the code for the celebration
+            // by Haley Glenn
+  
+for (int i = 0; i<StepsPerRev; i++)
+MainStep.step(1);
+
 }
