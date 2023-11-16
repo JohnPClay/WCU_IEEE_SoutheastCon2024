@@ -1,5 +1,4 @@
 
-
 /*Written by John Clay and Ethan Magnante
  * For the IEEE SouthEastCon 2024 Hardware Competition
  * 
@@ -8,10 +7,10 @@
 #include "Wire.h"              // for I2C
 #include "sensorbar.h"         // needs SparkFun library
 #include "TCS34725.h"         //library for the RGB sensor. its the TCS34725 library by  hideakitai found under manage libraries
-#define ENCA 18 //motor encoder A 
-#define ENCB 19 //motor encoder B
+#define ENCA 20 //motor encoder A 
+#define ENCB 21 //motor encoder B
 
-#include <Stepper.h>
+#include "Stepper.h"
 
 int StepsPerRev=2038; // how many steps are in a full revolution
 Stepper MainStep(StepsPerRev,8,9,10,11); //stepper motor pins
@@ -23,15 +22,24 @@ int Count_pulses2 = 0;
 //  pin selects. SX1509 breakout defaults to [0:0] (0x3E).
 const uint8_t SX1509_ADDRESS = 0x3E;  // SX1509 I2C address (00)
 
+const byte MAXSPEED = 50; //max speed of robot
 
+int L_Speed = MAXSPEED;
+int R_Speed = MAXSPEED;
+
+int error = 0;
+int lastError = 0;
+
+const byte Kp = 1;
+const byte Kd = 2;
 SensorBar mySensorBar(SX1509_ADDRESS);
 
 
 ////motor pins
 //speed control
-int left_Motor_Enable = 7;
+int left_Motor_Enable = 2;
 
-int right_Motor_Enable = 2;
+int right_Motor_Enable = 7;
 
 //left motors
 
@@ -55,6 +63,7 @@ void setup() {
   Serial.begin(9600);
   //Default: the IR will only be turned on during reads.
   mySensorBar.setBarStrobe();
+  Serial.println("set up serial");
   //Other option: Command to run all the time
   //mySensorBar.clearBarStrobe();
 
@@ -62,10 +71,10 @@ void setup() {
   //mySensorBar.clearInvertBits();
   //Other option: light line on dark
   mySensorBar.setInvertBits();
-
+  Serial.println("bits inverted");
   //Don't forget to call .begin() to get the bar ready.  This configures HW.
   uint8_t returnStatus = mySensorBar.begin();
-
+  Serial.println("return set up");
   pinMode(ENCA,INPUT); // sets the Encoder_output_A pin as the input
   pinMode(ENCB,INPUT); // sets the Encoder_output_B pin as the input
   attachInterrupt(digitalPinToInterrupt(ENCA),DC_Motor_Encoder1,RISING);
@@ -89,10 +98,10 @@ void loop() {
   
 
 //  
-//  Serial.println(mySensorBar.getDensity());
-  Serial.println(mySensorBar.getPosition());
-  line_Follow();//this function contains most of the code
+  Serial.println(mySensorBar.getDensity());
+//  Serial.println(mySensorBar.getPosition());
+  //line_Follow();//this function contains most of the code
 
-  delay(20);
+  delay(500);
 
 }
