@@ -1,102 +1,252 @@
 
-/*Written by John Clay and Ethan Magnante
- * For the IEEE SouthEastCon 2024 Hardware Competition
- * 
- */
-
-#include "Wire.h"              // for I2C
-#include "sensorbar.h"         // needs SparkFun library
-//#include "TCS34725.h"         //library for the RGB sensor. its the TCS34725 library by  hideakitai found under manage libraries
-#define ENCA 18 //motor encoder A 
-#define ENCB 19 //motor encoder B
-
-#include "Stepper.h"
-
-int StepsPerRev=2038; // how many steps are in a full revolution
-Stepper MainStep(StepsPerRev,8,9,10,11); //stepper motor pins
-int a = 5;// speed of stepper motor
 
 
-int Count_pulses1 = 0;
-int Count_pulses2 = 0;
-//  pin selects. SX1509 breakout defaults to [0:0] (0x3E).
-const uint8_t SX1509_ADDRESS = 0x3E;  // SX1509 I2C address (00)
-
-const byte MAXSPEED = 50; //max speed of robot
-
-int L_Speed = MAXSPEED;
-int R_Speed = MAXSPEED;
-
-int error = 0;
-int lastError = 0;
-
-const byte Kp = 1;
-const byte Kd = 2;
-SensorBar mySensorBar(SX1509_ADDRESS);
-
-
-////motor pins
-//speed control
-int left_Motor_Enable = 2;
-
-int right_Motor_Enable = 7;
-
-//left motors
-
-//int back_Left_Motor_S1
-//int back_Left_Motor_S2
-
-int left_Motor_S1 = 4;
-int left_Motor_S2 = 3;
-
-//right motors
-
-int right_Motor_S1 = 6;
-int right_Motor_S2 = 5;
-
-//int front_Right-Motor_S1
-//int front_Right-Motor_S2
+//void line_Follow() {
+//
+//
+//
+//
+//  if ( mySensorBar.getDensity() < 7 )
+//  {
+//
+//    if ( mySensorBar.getPosition() < -25 ) //checking to see if the line is on the left side of the sensor
+//    {
+//      Serial.println("turning left");
+//      turnLeft(50, 90);
+//    }
+//    if ( mySensorBar.getPosition() > 25 ) //checking to see if the line is on the right side of the sensor
+//    {
+//      Serial.println("turning right");
+//      //turnRight(50, 90);
+//    }
+//    else if (mySensorBar.getPosition() >= -25 and mySensorBar.getPosition() <= 25){ //checking to see if the line is in the center of the sensor
+//        Serial.println("going forward");
+//        forwardS(50, 0.25);
+//    }
+//  }
+//  else if (mySensorBar.getDensity() > 7){ //checking to see if the line is more "dense" than usual i.e brighter/the entire length of sensor.
+//    Serial.println("white line found");
+//   //ebreak(20);
+//  }
+//
+//}
 
 
-void setup() {
-  MainStep.setSpeed(a);
-  Serial.begin(9600);
-  //Default: the IR will only be turned on during reads.
-  mySensorBar.setBarStrobe();
-  Serial.println("set up serial");
-  //Other option: Command to run all the time
-  //mySensorBar.clearBarStrobe();
 
-  //Default: dark on light
-  //mySensorBar.clearInvertBits();
-  //Other option: light line on dark
-  mySensorBar.setInvertBits();
-  //Don't forget to call .begin() to get the bar ready.  This configures HW.
-  uint8_t returnStatus = mySensorBar.begin();
-  pinMode(ENCA,INPUT); // sets the Encoder_output_A pin as the input
-  pinMode(ENCB,INPUT); // sets the Encoder_output_B pin as the input
-  attachInterrupt(digitalPinToInterrupt(ENCA),DC_Motor_Encoder1,RISING);
-//   attachInterrupt(digitalPinToInterrupt(ENCB),DC_Motor_Encoder2,RISING);
+void line_Follow(){
+    while ((mySensorBar.getDensity() > 0) and (mySensorBar.getDensity() < 7)){ // While loop to check if yellow line is detected (i.e. normal sequence for yellow line)
+    error = mySensorBar.getPosition(); 
+    if ( error < -35) // checking to see if the line is on the left side of the sensor
+    {
 
-  if (returnStatus)
-  {
-    Serial.println("sx1509 IC communication OK");
+      R_Speed = MAXSPEED;
+      L_Speed = MAXSPEED + (Kp * error) + (Kd * (error - lastError)); // plus since error is negative, will result in negative values for proportionate term
+      L_Speed = constrain(L_Speed, 0, MAXSPEED);
+      Serial.println("Robot Turn Left Statement");
+      delay(100);
+      
+    } // End of line on left side of robot if statement 
+    else if (mySensorBar.getPosition() > 35){ // checking to see if the line is on the right side of the sensor
+      
+      R_Speed = MAXSPEED - (Kp * error) - (Kd * (error - lastError));
+      L_Speed = MAXSPEED; // plus since error is negative, will result in negative values for proportionate term
+      R_Speed = constrain(R_Speed, 0, MAXSPEED);
+      Serial.println("Robot Turn Right Statement");
+      delay(100);
+      
+    } // End of line on right side of robot else if statement
+    else{ //checking to see if the line is in the center of the sensor
+      
+      L_Speed = MAXSPEED;
+      R_Speed = MAXSPEED;
+      Serial.println("Robot Goes Straight Statement");
+      delay(100);
+      
+    } // End of center line else statement
+    forwardS(L_Speed, R_Speed);
+    lastError = error;
+  } // End of yellow line While loop
+  
+  if (mySensorBar.getDensity() == 0){ // If statement used for turning the robot 90 dgrees once a 90 degree turn is detected
+    
+    Serial.println("This is where the turn code will go");
+    delay(500);
+    return;
+    
+  } // End of 90 degree turn if statement
+  
+  if (mySensorBar.getDensity() > 7){ // If statement used for detecting the white line in the course
+
+    Serial.println("This is where the white line code will go");
+    delay(500);
+    return;
+    
   }
-  else
-  {
-    Serial.println("sx1509 IC communication FAILED!");
-  }
-  Serial.println();
+  
+} // End of line_Follow() function
+
+
+void ebreak(float delay_Time) { //forces the robot to stop moving when called
+  // turn the motor speed to zero
+  analogWrite(left_Motor_Enable, 0);
+  analogWrite(right_Motor_Enable, 0);
+
+  // turn the motors off
+  digitalWrite(left_Motor_S1, HIGH);
+  digitalWrite(left_Motor_S2, HIGH);
+  digitalWrite(right_Motor_S1, HIGH);
+  digitalWrite(right_Motor_S2, HIGH);
+
+
+  delay(delay_Time);
 
 }
 
 
-void loop() {
+void backward(float motor_Speed, float delay_Time) {
 
-  Serial.print("Density: ");
-  Serial.println(mySensorBar.getDensity());
-  Serial.print("Position: ");
-  Serial.println(mySensorBar.getPosition());
-//  line_Follow();//this function contains most of the code
-  delay(500);
+  analogWrite(left_Motor_Enable, motor_Speed);
+  analogWrite(right_Motor_Enable, motor_Speed);
+
+  digitalWrite(left_Motor_S1, HIGH);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, HIGH);
+  digitalWrite(right_Motor_S2, LOW);
+
+  int seconds = ceil(delay_Time * 1000);
+  delay(seconds);
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, LOW);
+
+
+}
+
+void forward(float motor_Speed, float delay_Time) {
+
+  analogWrite(left_Motor_Enable, motor_Speed);
+  analogWrite(right_Motor_Enable, motor_Speed);
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, HIGH);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, HIGH);
+
+  int seconds = ceil(delay_Time * 1000);
+  delay(seconds);
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, LOW);
+
+
+}
+
+void forwardS(float L_speed, float R_speed) {
+
+
+  analogWrite(left_Motor_Enable, L_speed);
+  analogWrite(right_Motor_Enable, R_speed);
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, HIGH);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, HIGH);
+  //  Serial.println(mySensorBar.getPosition());
+  //  delay(20);
+
+
+
+}
+
+
+void DC_Motor_Encoder1() {
+
+
+  Count_pulses1++;
+
+//  Serial.println(Count_pulses1);
+  //  Serial.println(Count_pulses1 + Count_pulses2);
+}
+
+////void DC_Motor_Encoder2(){
+////
+////
+////    Count_pulses2++;
+////
+////
+////  Serial.println(Count_pulses1+Count_pulses2);
+////}
+
+
+
+void turnLeft(float motor_Speed, float turn_Degrees) {
+
+  analogWrite(left_Motor_Enable, motor_Speed);
+  analogWrite(right_Motor_Enable, motor_Speed);
+
+  Count_pulses1 = 0;
+  Count_pulses2 = 0;
+
+  //int pulses = 30 * 16 * (turn_Degrees / 360); //16 is the number of pulses in a full rotaion when using the rising edge of ENCA
+  int pulses = ((turn_Degrees*160*16)/(67.5*3.1415*360*sqrt(2)));
+
+  //while(abs(Count_pulses1 + Count_pulses2) < pulses)
+  while (abs(Count_pulses1) < pulses) { //comparing the number of pulses since the wheel started turning to the number of pulses needed to turn
+
+    // 67.5mm diameter, 160 mm base
+
+    //number_of_encoder_ticks = (90 * wheel_base_distance * encoder_resolution) / (wheel_diameter * pi * 360 * sqrt(2))
+
+    digitalWrite(left_Motor_S1, HIGH);
+    digitalWrite(left_Motor_S2, LOW);
+    digitalWrite(right_Motor_S1, LOW);
+    digitalWrite(right_Motor_S2, HIGH);
+    Serial.println(Count_pulses1);
+
+  }
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, LOW);
+
+}
+
+void turnRight(float motor_Speed, float turn_Degrees) {
+
+  analogWrite(left_Motor_Enable, motor_Speed);
+  analogWrite(right_Motor_Enable, motor_Speed);
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, HIGH);
+  digitalWrite(right_Motor_S1, HIGH);
+  digitalWrite(right_Motor_S2, LOW);
+
+  delay(1000);
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, LOW);
+
+}
+
+
+void zipline() {
+
+  //this will be the code for the zipline/canyon
+
+
+}
+
+void spin() { //will spin the sign. it is the code for the celebration
+  // by Haley Glenn
+
+  for (int i = 0; i < StepsPerRev; i++)
+    MainStep.step(1);
+
 }
