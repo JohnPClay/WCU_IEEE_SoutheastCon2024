@@ -103,7 +103,7 @@ void loop() {
 ////  line_Follow();//this function contains most of the code
 //  delay(500);
 
-  turnLeft(90,90);
+  turnLeft(100,90);
   delay(1000);
   /* this is how the code will look later on
    * line_Follow();

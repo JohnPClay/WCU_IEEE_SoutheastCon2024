@@ -168,7 +168,7 @@ void DC_Motor_Encoder1() {
 
   Count_pulses1++;
 
-//  Serial.println(Count_pulses1);
+Serial.println(Count_pulses1);
   //  Serial.println(Count_pulses1 + Count_pulses2);
 }
 
@@ -190,9 +190,9 @@ void turnLeft(float motor_Speed, float turn_Degrees) {
 
   Count_pulses1 = 0;
   Count_pulses2 = 0;
-
-  //int pulses = 30 * 16 * (turn_Degrees / 360); //16 is the number of pulses in a full rotaion when using the rising edge of ENCA
-  int pulses = ((turn_Degrees*160*16)/(67.5*3.1415*360*sqrt(2)));
+//750 pulse ;=in a full rotaion
+  int pulses = 760 * (turn_Degrees / 360); //16 is the number of pulses in a full rotaion when using the rising edge of ENCA
+ // int pulses = ((turn_Degrees*160*16)/(67.5*3.1415*360*sqrt(2)));
 
   //while(abs(Count_pulses1 + Count_pulses2) < pulses)
   while (abs(Count_pulses1) < pulses) { //comparing the number of pulses since the wheel started turning to the number of pulses needed to turn
