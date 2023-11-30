@@ -6,6 +6,8 @@
 
  //PINS 20 AND 21 CANNOT BE USED DO TO INTERFERENCE WITH THE SENSOR
  
+ //pins 7-5 dont fully work
+ 
 
 #include "Wire.h"              // for I2C
 #include "sensorbar.h"         // needs SparkFun library
@@ -25,7 +27,7 @@ int Count_pulses2 = 0;
 //  pin selects. SX1509 breakout defaults to [0:0] (0x3E).
 const uint8_t SX1509_ADDRESS = 0x3E;  // SX1509 I2C address (00)
 
-const byte MAXSPEED = 50; //max speed of robot
+const byte MAXSPEED = 60; //max speed of robot
 
 int L_Speed = MAXSPEED;
 int R_Speed = MAXSPEED;
@@ -40,22 +42,22 @@ SensorBar mySensorBar(SX1509_ADDRESS);
 
 ////motor pins
 //speed control
-int left_Motor_Enable = 2;
+int left_Motor_Enable = 44;
 
-int right_Motor_Enable = 7;
+int right_Motor_Enable = 46;
 
 //left motors
 
 //int back_Left_Motor_S1
 //int back_Left_Motor_S2
 
-int left_Motor_S1 = 4;
-int left_Motor_S2 = 3;
+int left_Motor_S1 = 52;
+int left_Motor_S2 = 50;
 
 //right motors
 
-int right_Motor_S1 = 6;
-int right_Motor_S2 = 5;
+int right_Motor_S1 = 53;
+int right_Motor_S2 = 51;
 
 //int front_Right-Motor_S1
 //int front_Right-Motor_S2
@@ -95,16 +97,22 @@ void setup() {
 
 
 void loop() {
-
+//
 //  Serial.print("Density: ");
 //  Serial.println(mySensorBar.getDensity());
 //  Serial.print("Position: ");
 //  Serial.println(mySensorBar.getPosition());
 ////  line_Follow();//this function contains most of the code
 //  delay(500);
-
+  line_Follow(); 
   turnLeft(100,90);
   delay(1000);
+  line_Follow();
+  turnLeft(100,90);
+  delay(1000);
+  line_Follow();
+  delay(5000);
+   
   /* this is how the code will look later on
    * line_Follow();
    * //do stuff --drop off boxes

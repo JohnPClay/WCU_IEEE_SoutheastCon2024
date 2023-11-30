@@ -33,9 +33,25 @@
 
 
 
-void line_Follow(){
-    while ((mySensorBar.getDensity() > 0) and (mySensorBar.getDensity() < 7)){ // While loop to check if yellow line is detected (i.e. normal sequence for yellow line)
-    error = mySensorBar.getPosition(); 
+void line_Follow() {
+  while ((mySensorBar.getDensity() < 4)) { // While loop to check if yellow line is detected (i.e. normal sequence for yellow line)
+    Serial.println(mySensorBar.getDensity());
+    if (mySensorBar.getDensity() == 0) { // If statement used for turning the robot 90 dgrees once a 90 degree turn is detected
+
+      Serial.println("This is where the turn code will go");
+      delay(500);
+      return;
+
+    } // End of 90 degree turn if statement
+
+    if (mySensorBar.getDensity() > 4) { // If statement used for detecting the white line in the course
+
+      Serial.println("This is where the white line code will go");
+      delay(500);
+      return;
+
+    }
+    error = mySensorBar.getPosition();
     if ( error < -35) // checking to see if the line is on the left side of the sensor
     {
 
@@ -43,46 +59,31 @@ void line_Follow(){
       L_Speed = MAXSPEED + (Kp * error) + (Kd * (error - lastError)); // plus since error is negative, will result in negative values for proportionate term
       L_Speed = constrain(L_Speed, 0, MAXSPEED);
       Serial.println("Robot Turn Left Statement");
-      delay(100);
-      
-    } // End of line on left side of robot if statement 
-    else if (mySensorBar.getPosition() > 35){ // checking to see if the line is on the right side of the sensor
-      
+
+
+    } // End of line on left side of robot if statement
+    else if (mySensorBar.getPosition() > 35) { // checking to see if the line is on the right side of the sensor
+
       R_Speed = MAXSPEED - (Kp * error) - (Kd * (error - lastError));
       L_Speed = MAXSPEED; // plus since error is negative, will result in negative values for proportionate term
       R_Speed = constrain(R_Speed, 0, MAXSPEED);
       Serial.println("Robot Turn Right Statement");
-      delay(100);
-      
+
     } // End of line on right side of robot else if statement
-    else{ //checking to see if the line is in the center of the sensor
-      
+    else { //checking to see if the line is in the center of the sensor
+
       L_Speed = MAXSPEED;
       R_Speed = MAXSPEED;
       Serial.println("Robot Goes Straight Statement");
-      delay(100);
-      
+
+
     } // End of center line else statement
     forwardS(L_Speed, R_Speed);
     lastError = error;
   } // End of yellow line While loop
-  
-  if (mySensorBar.getDensity() == 0){ // If statement used for turning the robot 90 dgrees once a 90 degree turn is detected
-    
-    Serial.println("This is where the turn code will go");
-    delay(500);
-    return;
-    
-  } // End of 90 degree turn if statement
-  
-  if (mySensorBar.getDensity() > 7){ // If statement used for detecting the white line in the course
 
-    Serial.println("This is where the white line code will go");
-    delay(500);
-    return;
-    
-  }
-  
+
+
 } // End of line_Follow() function
 
 
@@ -168,8 +169,7 @@ void DC_Motor_Encoder1() {
 
   Count_pulses1++;
 
-Serial.println(Count_pulses1);
-  //  Serial.println(Count_pulses1 + Count_pulses2);
+
 }
 
 ////void DC_Motor_Encoder2(){
@@ -189,26 +189,31 @@ void turnLeft(float motor_Speed, float turn_Degrees) {
   analogWrite(right_Motor_Enable, motor_Speed);
 
   Count_pulses1 = 0;
-  Count_pulses2 = 0;
-//750 pulse ;=in a full rotaion
-  int pulses = 760 * (turn_Degrees / 360); //16 is the number of pulses in a full rotaion when using the rising edge of ENCA
- // int pulses = ((turn_Degrees*160*16)/(67.5*3.1415*360*sqrt(2)));
+
+  //750 pulse ;=in a full rotaion
+  int pulses = 3 * 760 * (turn_Degrees / 360); //16 is the number of pulses in a full rotaion when using the rising edge of ENCA
+  // int pulses = ((turn_Degrees*160*16)/(67.5*3.1415*360*sqrt(2)));
+
+  digitalWrite(left_Motor_S1, HIGH);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, HIGH);
 
   //while(abs(Count_pulses1 + Count_pulses2) < pulses)
-  while (abs(Count_pulses1) < pulses) { //comparing the number of pulses since the wheel started turning to the number of pulses needed to turn
+
+  while (Count_pulses1 < pulses) { //comparing the number of pulses since the wheel started turning to the number of pulses needed to turn
 
     // 67.5mm diameter, 160 mm base
 
     //number_of_encoder_ticks = (90 * wheel_base_distance * encoder_resolution) / (wheel_diameter * pi * 360 * sqrt(2))
-
-    digitalWrite(left_Motor_S1, HIGH);
-    digitalWrite(left_Motor_S2, LOW);
-    digitalWrite(right_Motor_S1, LOW);
-    digitalWrite(right_Motor_S2, HIGH);
+    Serial.print(pulses);
+    Serial.print(" , ");
     Serial.println(Count_pulses1);
 
   }
 
+  ebreak(20);
+  Count_pulses1 = 0;
   digitalWrite(left_Motor_S1, LOW);
   digitalWrite(left_Motor_S2, LOW);
   digitalWrite(right_Motor_S1, LOW);
