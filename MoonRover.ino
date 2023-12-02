@@ -27,7 +27,8 @@ int Count_pulses2 = 0;
 //  pin selects. SX1509 breakout defaults to [0:0] (0x3E).
 const uint8_t SX1509_ADDRESS = 0x3E;  // SX1509 I2C address (00)
 
-const byte MAXSPEED = 60; //max speed of robot
+const byte MAXSPEED = 50; //max speed of robot
+const byte MINSPEED =45;
 
 int L_Speed = MAXSPEED;
 int R_Speed = MAXSPEED;
@@ -92,7 +93,7 @@ void setup() {
     Serial.println("sx1509 IC communication FAILED!");
   }
   Serial.println();
-
+  forward(60,0.5);
 }
 
 
@@ -102,17 +103,22 @@ void loop() {
 //  Serial.println(mySensorBar.getDensity());
 //  Serial.print("Position: ");
 //  Serial.println(mySensorBar.getPosition());
-////  line_Follow();//this function contains most of the code
+//  delay(200);
+//  line_Follow();//this function contains most of the code
 //  delay(500);
+ // forward(60,1);
+   Serial.println(mySensorBar.getDensity());
   line_Follow(); 
-  turnLeft(100,90);
   delay(1000);
-  line_Follow();
-  turnLeft(100,90);
-  delay(1000);
-  line_Follow();
-  delay(5000);
-   
+    turnLeft(100,90);
+     forward(60,0.5);
+//  delay(1000);
+//  line_Follow();
+//  turnLeft(100,90);
+//  delay(1000);
+//  line_Follow();
+//  delay(5000);
+//   
   /* this is how the code will look later on
    * line_Follow();
    * //do stuff --drop off boxes

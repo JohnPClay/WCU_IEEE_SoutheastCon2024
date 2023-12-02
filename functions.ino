@@ -34,10 +34,11 @@
 
 
 void line_Follow() {
-  while ((mySensorBar.getDensity() < 4)) { // While loop to check if yellow line is detected (i.e. normal sequence for yellow line)
+  while ((mySensorBar.getDensity() <= 4)) { // While loop to check if yellow line is detected (i.e. normal sequence for yellow line)
     Serial.println(mySensorBar.getDensity());
     if (mySensorBar.getDensity() == 0) { // If statement used for turning the robot 90 dgrees once a 90 degree turn is detected
-
+      ebreak(20);
+      backward(55,0.25);
       Serial.println("This is where the turn code will go");
       delay(500);
       return;
@@ -45,6 +46,8 @@ void line_Follow() {
     } // End of 90 degree turn if statement
 
     if (mySensorBar.getDensity() > 4) { // If statement used for detecting the white line in the course
+      ebreak(20);
+      backward(55,0.25);
 
       Serial.println("This is where the white line code will go");
       delay(500);
@@ -57,7 +60,7 @@ void line_Follow() {
 
       R_Speed = MAXSPEED;
       L_Speed = MAXSPEED + (Kp * error) + (Kd * (error - lastError)); // plus since error is negative, will result in negative values for proportionate term
-      L_Speed = constrain(L_Speed, 0, MAXSPEED);
+      L_Speed = constrain(L_Speed, MINSPEED, MAXSPEED);
       Serial.println("Robot Turn Left Statement");
 
 
@@ -66,7 +69,7 @@ void line_Follow() {
 
       R_Speed = MAXSPEED - (Kp * error) - (Kd * (error - lastError));
       L_Speed = MAXSPEED; // plus since error is negative, will result in negative values for proportionate term
-      R_Speed = constrain(R_Speed, 0, MAXSPEED);
+      R_Speed = constrain(R_Speed, MINSPEED, MAXSPEED);
       Serial.println("Robot Turn Right Statement");
 
     } // End of line on right side of robot else if statement
