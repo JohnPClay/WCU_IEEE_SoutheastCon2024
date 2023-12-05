@@ -1,13 +1,13 @@
 
 /*Written by John Clay and Ethan Magnante
- * For the IEEE SouthEastCon 2024 Hardware Competition
- * 
- */
+   For the IEEE SouthEastCon 2024 Hardware Competition
 
- //PINS 20 AND 21 CANNOT BE USED DO TO INTERFERENCE WITH THE SENSOR
- 
- //pins 7-5 dont fully work
- 
+*/
+
+//PINS 20 AND 21 CANNOT BE USED DO TO INTERFERENCE WITH THE SENSOR
+
+//pins 7-5 dont fully work
+
 
 #include "Wire.h"              // for I2C
 #include "sensorbar.h"         // needs SparkFun library
@@ -17,8 +17,8 @@
 
 #include "Stepper.h"
 
-int StepsPerRev=2038; // how many steps are in a full revolution
-Stepper MainStep(StepsPerRev,8,9,10,11); //stepper motor pins
+int StepsPerRev = 2038; // how many steps are in a full revolution
+Stepper MainStep(StepsPerRev, 8, 9, 10, 11); //stepper motor pins
 int a = 5;// speed of stepper motor
 
 
@@ -27,8 +27,8 @@ int Count_pulses2 = 0;
 //  pin selects. SX1509 breakout defaults to [0:0] (0x3E).
 const uint8_t SX1509_ADDRESS = 0x3E;  // SX1509 I2C address (00)
 
-const byte MAXSPEED = 50; //max speed of robot
-const byte MINSPEED =45;
+const byte MAXSPEED = 70; //max speed of robot
+const byte MINSPEED = 50;
 
 int L_Speed = MAXSPEED;
 int R_Speed = MAXSPEED;
@@ -39,6 +39,10 @@ int lastError = 0;
 const byte Kp = 1;
 const byte Kd = 2;
 SensorBar mySensorBar(SX1509_ADDRESS);
+
+
+int currentDensity = 1;
+int previousDensity = 1;
 
 
 ////motor pins
@@ -71,7 +75,7 @@ void setup() {
   mySensorBar.setBarStrobe();
   Serial.println("set up serial");
   //Other option: Command to run all the time
-  //mySensorBar.clearBarStrobe();
+  //  mySensorBar.clearBarStrobe();
 
   //Default: dark on light
   //mySensorBar.clearInvertBits();
@@ -79,10 +83,10 @@ void setup() {
   mySensorBar.setInvertBits();
   //Don't forget to call .begin() to get the bar ready.  This configures HW.
   uint8_t returnStatus = mySensorBar.begin();
-  pinMode(ENCA,INPUT); // sets the Encoder_output_A pin as the input
-  pinMode(ENCB,INPUT); // sets the Encoder_output_B pin as the input
-  attachInterrupt(digitalPinToInterrupt(ENCA),DC_Motor_Encoder1,RISING);
-//   attachInterrupt(digitalPinToInterrupt(ENCB),DC_Motor_Encoder2,RISING);
+  pinMode(ENCA, INPUT); // sets the Encoder_output_A pin as the input
+  pinMode(ENCB, INPUT); // sets the Encoder_output_B pin as the input
+  attachInterrupt(digitalPinToInterrupt(ENCA), DC_Motor_Encoder1, RISING);
+  //   attachInterrupt(digitalPinToInterrupt(ENCB),DC_Motor_Encoder2,RISING);
 
   if (returnStatus)
   {
@@ -93,42 +97,51 @@ void setup() {
     Serial.println("sx1509 IC communication FAILED!");
   }
   Serial.println();
-  forward(60,0.5);
+  forward(70, 2);
 }
 
 
 void loop() {
-//
-//  Serial.print("Density: ");
-//  Serial.println(mySensorBar.getDensity());
-//  Serial.print("Position: ");
-//  Serial.println(mySensorBar.getPosition());
-//  delay(200);
-//  line_Follow();//this function contains most of the code
-//  delay(500);
- // forward(60,1);
-   Serial.println(mySensorBar.getDensity());
-  line_Follow(); 
+  //
+  //    Serial.print("Density: ");
+  //    Serial.println(mySensorBar.getDensity());
+  //    Serial.print("Position: ");
+  //    Serial.println(mySensorBar.getPosition());
+  //    delay(200);
+  //  line_Follow();//this function contains most of the code
+  //  delay(500);
+  // forward(60,1);
+  //  Serial.println(mySensorBar.getDensity());
+  //  line_Follow();
+  //  delay(1000);
+  //  turnLeft(120, 90);
+  // forward(60, 0.5);
+  //  delay(1000);
+  line_Follow();
+  backward(70, 0.35);
+  ebreak(500);
+  turnLeft(120, 100);
   delay(1000);
-    turnLeft(100,90);
-     forward(60,0.5);
-//  delay(1000);
-//  line_Follow();
-//  turnLeft(100,90);
-//  delay(1000);
-//  line_Follow();
-//  delay(5000);
-//   
-  /* this is how the code will look later on
-   * line_Follow();
-   * //do stuff --drop off boxes
-   * turn_Left(90);
-   * line_Follow();
-   * //do stuff -- pick up thrusters
-   * turn_Left(90);
-   * line_Follow();
-   * white line(); --this is where the zipline
-   */
+  line_Follow();
+  backward(70, 0.35);
+  ebreak(500);
 
-  
+  turnLeft(120, 120);
+  delay(1000);
+  forward(70, 1.5);
+  //line_Follow();
+  delay(5000);
+  //
+  /* this is how the code will look later on
+     line_Follow();
+     //do stuff --drop off boxes
+     turn_Left(90);
+     line_Follow();
+     //do stuff -- pick up thrusters
+     turn_Left(90);
+     line_Follow();
+     white line(); --this is where the zipline
+  */
+
+
 }
