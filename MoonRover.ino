@@ -12,13 +12,13 @@
 #include "Wire.h"              // for I2C
 #include "sensorbar.h"         // needs SparkFun library
 //#include "TCS34725.h"         //library for the RGB sensor. its the TCS34725 library by  hideakitai found under manage libraries
-#define ENCA 18 //motor encoder A 
-#define ENCB 19 //motor encoder B
+#define ENCA 7 //motor encoder A 
+#define ENCB 6 //motor encoder B
 
 #include "Stepper.h"
 
 int StepsPerRev = 2038; // how many steps are in a full revolution
-Stepper MainStep(StepsPerRev, 8, 9, 10, 11); //stepper motor pins
+Stepper MainStep(StepsPerRev, A0, A1, A2, A3); //stepper motor pins
 int a = 5;// speed of stepper motor
 
 
@@ -97,51 +97,76 @@ void setup() {
     Serial.println("sx1509 IC communication FAILED!");
   }
   Serial.println();
-  forward(70, 2);
+  //forward(70, 2.5);
 }
 
 
 void loop() {
   //
-  //    Serial.print("Density: ");
-  //    Serial.println(mySensorBar.getDensity());
-  //    Serial.print("Position: ");
-  //    Serial.println(mySensorBar.getPosition());
-  //    delay(200);
-  //  line_Follow();//this function contains most of the code
-  //  delay(500);
-  // forward(60,1);
-  //  Serial.println(mySensorBar.getDensity());
-  //  line_Follow();
-  //  delay(1000);
-  //  turnLeft(120, 90);
-  // forward(60, 0.5);
-  //  delay(1000);
-  line_Follow();
-  backward(70, 0.35);
-  ebreak(500);
-  turnLeft(120, 100);
-  delay(1000);
-  line_Follow();
-  backward(70, 0.35);
-  ebreak(500);
+  //      Serial.print("Density: ");
+  //      Serial.println(mySensorBar.getDensity());
+  //      Serial.print("Position: ");
+  //      Serial.println(mySensorBar.getPosition());
+  //      delay(200);
 
-  turnLeft(120, 120);
-  delay(1000);
-  forward(70, 1.5);
-  //line_Follow();
-  delay(5000);
+  //    line_Follow();//this function contains most of the code
+
+  //  Serial.println(mySensorBar.getDensity());
+
+
+
+  forward(70, 5);
+
+ delay(7000);
+
+
+
+
+  ////the main code
+  
+  //  line_Follow();
+  //  backward(70, 0.35);
+  //  ebreak(500);
+  //  turnLeft(120, 100);
+  //  delay(1000);
+  //  line_Follow();
+  //  backward(70, 0.35);
+  //  ebreak(500);
   //
-  /* this is how the code will look later on
-     line_Follow();
-     //do stuff --drop off boxes
-     turn_Left(90);
-     line_Follow();
-     //do stuff -- pick up thrusters
-     turn_Left(90);
-     line_Follow();
-     white line(); --this is where the zipline
-  */
+  //  turnLeft(120, 120);
+  //  delay(1000);
+  //  forward(70, 1.5);
+  //  spin(3);
+  //  //line_Follow();
+  //  delay(7000);
+
+  //Backup hardcode
+
+  
+  // forward(70,1.1);
+  // forward(40,0.5);
+  // backward(70,0.7);
+  // forward(40,0.1);
+  // left(120, 1.15);
+  // backward(70,.5);
+  // forward(70,1.3);
+  // forward(40,0.7);
+  // backward(70,0.3);
+  // forward(40,0.1);
+  // left(120, 1.16);
+  // backward(70,.85);
+  // forward(70,2.35);
+  // delay(10000);
+
+
+
+  //pick up thrusters
+  //
+  //  backward(50,2);
+  //  backward(100,0.5);
+  //  forward(70,1);
+  //  delay(2000);
+  //
 
 
 }

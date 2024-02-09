@@ -92,7 +92,7 @@ void line_Follow() {
     previousDensity = currentDensity;
     forwardS(L_Speed, R_Speed);
     lastError = error;
-    delay(20);
+    delay(50);
   } // End of yellow line While loop
 
 
@@ -258,6 +258,27 @@ void turnRight(float motor_Speed, float turn_Degrees) {
 
 }
 
+void left(float motor_Speed, float time_delay){
+
+  analogWrite(left_Motor_Enable, motor_Speed);
+  analogWrite(right_Motor_Enable, motor_Speed);
+
+
+
+  digitalWrite(left_Motor_S1, HIGH);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, HIGH);
+
+  delay(time_delay*1000);
+   digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, LOW);
+
+  
+}
+
 
 void zipline() {
 
@@ -266,10 +287,10 @@ void zipline() {
 
 }
 
-void spin() { //will spin the sign. it is the code for the celebration
+void spin(int rotations) { //will spin the sign. it is the code for the celebration
   // by Haley Glenn
 
-  for (int i = 0; i < StepsPerRev; i++)
+  for (int i = 0; i < (rotations*StepsPerRev); i++)
     MainStep.step(1);
 
 }
