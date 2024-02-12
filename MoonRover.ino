@@ -5,21 +5,25 @@
 */
 
 //PINS 20 AND 21 CANNOT BE USED DO TO INTERFERENCE WITH THE SENSOR
-
+// pins 18 and 19 have a wire stuck in them
 //pins 7-5 dont fully work
 
 
 #include "Wire.h"              // for I2C
 #include "sensorbar.h"         // needs SparkFun library
 //#include "TCS34725.h"         //library for the RGB sensor. its the TCS34725 library by  hideakitai found under manage libraries
+
+
+// Needs Adafruiit_TCS347573 library for the purple color sensor
+#include "Adafruit_TCS34725.h"
+
 #define ENCA 7 //motor encoder A 
 #define ENCB 6 //motor encoder B
 
-#include "Stepper.h"
+
 
 int StepsPerRev = 2038; // how many steps are in a full revolution
-Stepper MainStep(StepsPerRev, A0, A1, A2, A3); //stepper motor pins
-int a = 5;// speed of stepper motor
+
 
 
 int Count_pulses1 = 0;
@@ -69,7 +73,7 @@ int right_Motor_S2 = 51;
 
 
 void setup() {
-  MainStep.setSpeed(a);
+
   Serial.begin(9600);
   //Default: the IR will only be turned on during reads.
   mySensorBar.setBarStrobe();
@@ -97,11 +101,18 @@ void setup() {
     Serial.println("sx1509 IC communication FAILED!");
   }
   Serial.println();
-  //forward(70, 2.5);
+  
+    
+start_up(5000, 0.1); //this is the function for the autostart.
+    
 }
 
 
 void loop() {
+
+ 
+
+  
   //
   //      Serial.print("Density: ");
   //      Serial.println(mySensorBar.getDensity());
@@ -115,13 +126,11 @@ void loop() {
 
 
 
-  forward(70, 5);
+//  forward(70, 5);
+//
+// delay(7000);
 
- delay(7000);
-
-
-
-
+//  spinCounter(5);
   ////the main code
   
   //  line_Follow();
@@ -140,23 +149,34 @@ void loop() {
   //  //line_Follow();
   //  delay(7000);
 
-  //Backup hardcode
 
-  
-  // forward(70,1.1);
-  // forward(40,0.5);
-  // backward(70,0.7);
-  // forward(40,0.1);
-  // left(120, 1.15);
-  // backward(70,.5);
-  // forward(70,1.3);
-  // forward(40,0.7);
-  // backward(70,0.3);
-  // forward(40,0.1);
-  // left(120, 1.16);
-  // backward(70,.85);
-  // forward(70,2.35);
-  // delay(10000);
+
+  //Backup hardcode
+   
+   //to box drop off
+   forward(70, 2.5);
+   forward(70,1.1);
+   forward(40,0.5);
+   
+   //first turn
+   backward(70,0.7);
+   forward(40,0.1);
+   left(120, 1.15);
+   backward(70,.5);
+   
+   //to thruster pick up
+   forward(70,1.3);
+   forward(40,0.7);
+   
+   //seocnd turn
+   backward(70,0.3);
+   forward(40,0.1);
+   left(120, 1.16);
+   backward(70,.85);
+   
+   //to white line
+   forward(70,2.35);
+   delay(10000);
 
 
 

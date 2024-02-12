@@ -287,10 +287,19 @@ void zipline() {
 
 }
 
-void spin(int rotations) { //will spin the sign. it is the code for the celebration
+void spinClock(int rotations) { //will spin the sign. it is the code for the celebration
   // by Haley Glenn
 
-  for (int i = 0; i < (rotations*StepsPerRev); i++)
-    MainStep.step(1);
+  for (int i = 0; i < (rotations*StepsPerRev); i++){
+    
+      CCW(A8,A9,A10,A15);
+  }
+}
+void spinCounter(int rotations) { //will spin the sign. it is the code for the celebration
+  // by Haley Glenn
 
+  for (int i = 0; i < (rotations*StepsPerRev); i++){
+    
+      CW(A8,A9,A10,A15);
+  }
 }
