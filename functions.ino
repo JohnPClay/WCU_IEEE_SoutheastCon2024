@@ -280,6 +280,28 @@ void left(float motor_Speed, float time_delay){
 }
 
 
+
+void right(float motor_Speed, float time_delay){
+
+  analogWrite(left_Motor_Enable, motor_Speed);
+  analogWrite(right_Motor_Enable, motor_Speed);
+
+
+
+  digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, HIGH);
+  digitalWrite(right_Motor_S1, HIGH);
+  digitalWrite(right_Motor_S2, LOW);
+
+  delay(time_delay*1000);
+   digitalWrite(left_Motor_S1, LOW);
+  digitalWrite(left_Motor_S2, LOW);
+  digitalWrite(right_Motor_S1, LOW);
+  digitalWrite(right_Motor_S2, LOW);
+
+  
+}
+
 void zipline() {
 
   //this will be the code for the zipline/canyon

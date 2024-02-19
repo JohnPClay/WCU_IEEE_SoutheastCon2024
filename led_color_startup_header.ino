@@ -60,5 +60,6 @@ void start_up(float max_time_delay_ms, float percent_0_to_1) {
     if (time_delay > max_time_delay_ms){
       break;
     }
+   Serial.print("Starting\n");
   }
 }

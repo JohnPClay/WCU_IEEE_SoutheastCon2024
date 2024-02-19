@@ -77,7 +77,7 @@ void setup() {
   Serial.begin(9600);
   //Default: the IR will only be turned on during reads.
   mySensorBar.setBarStrobe();
-  Serial.println("set up serial");
+  //Serial.println("set up serial");
   //Other option: Command to run all the time
   //  mySensorBar.clearBarStrobe();
 
@@ -91,17 +91,17 @@ void setup() {
   pinMode(ENCB, INPUT); // sets the Encoder_output_B pin as the input
   attachInterrupt(digitalPinToInterrupt(ENCA), DC_Motor_Encoder1, RISING);
   //   attachInterrupt(digitalPinToInterrupt(ENCB),DC_Motor_Encoder2,RISING);
-
-  if (returnStatus)
-  {
-    Serial.println("sx1509 IC communication OK");
-  }
-  else
-  {
-    Serial.println("sx1509 IC communication FAILED!");
-  }
-  Serial.println();
-  
+//
+//  if (returnStatus)
+//  {
+//    Serial.println("sx1509 IC communication OK");
+//  }
+//  else
+//  {
+//    Serial.println("sx1509 IC communication FAILED!");
+//  }
+//  Serial.println();
+//  
     
 start_up(5000, 0.1); //this is the function for the autostart.
     
@@ -159,26 +159,43 @@ void loop() {
    forward(40,0.5);
    
    //first turn
-   backward(70,0.7);
+   backward(70,0.8);
    forward(40,0.1);
-   left(120, 1.15);
-   backward(70,.5);
+   left(140, 0.7);
+   backward(70,1);
    
    //to thruster pick up
-   forward(70,1.3);
+   forward(70,1.2);
    forward(40,0.7);
    
    //seocnd turn
    backward(70,0.3);
    forward(40,0.1);
-   left(120, 1.16);
-   backward(70,.85);
-   
-   //to white line
+   left(140, 0.7);
+   backward(70,1);
+   delay(3000);
+   forward(70,0.5);
+   right(140,0.2);
+   backward(70,1.2);
+   delay(10000);
+
+ 
+//   //to white line
    forward(70,2.35);
    delay(10000);
 
+   forward(120,3);
+   forward(70,1);
 
+//hit the button
+
+    
+  forward(70,1.5);
+  right(140,1);
+  backward(70,0.2);
+  backward(70,1.2);
+  forward(70,2);
+  delay(10000);
 
   //pick up thrusters
   //
