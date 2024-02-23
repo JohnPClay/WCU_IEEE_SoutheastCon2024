@@ -1,4 +1,5 @@
 
+
 /*Written by John Clay and Ethan Magnante
    For the IEEE SouthEastCon 2024 Hardware Competition
 
@@ -12,7 +13,7 @@
 #include "Wire.h"              // for I2C
 #include "sensorbar.h"         // needs SparkFun library
 //#include "TCS34725.h"         //library for the RGB sensor. its the TCS34725 library by  hideakitai found under manage libraries
-
+#include "Servo.h"
 
 // Needs Adafruiit_TCS347573 library for the purple color sensor
 #include "Adafruit_TCS34725.h"
@@ -20,7 +21,9 @@
 #define ENCA 7 //motor encoder A 
 #define ENCB 6 //motor encoder B
 
-
+Servo spinServo;
+Servo plowServo1;
+Servo plowServo2;
 
 int StepsPerRev = 2038; // how many steps are in a full revolution
 
@@ -71,12 +74,10 @@ int right_Motor_S2 = 51;
 //int front_Right-Motor_S1
 //int front_Right-Motor_S2
 
-
 void setup() {
-
   Serial.begin(9600);
   //Default: the IR will only be turned on during reads.
-  mySensorBar.setBarStrobe();
+  //mySensorBar.setBarStrobe();
   //Serial.println("set up serial");
   //Other option: Command to run all the time
   //  mySensorBar.clearBarStrobe();
@@ -84,35 +85,35 @@ void setup() {
   //Default: dark on light
   //mySensorBar.clearInvertBits();
   //Other option: light line on dark
-  mySensorBar.setInvertBits();
+ // mySensorBar.setInvertBits();
   //Don't forget to call .begin() to get the bar ready.  This configures HW.
-  uint8_t returnStatus = mySensorBar.begin();
-  pinMode(ENCA, INPUT); // sets the Encoder_output_A pin as the input
-  pinMode(ENCB, INPUT); // sets the Encoder_output_B pin as the input
-  attachInterrupt(digitalPinToInterrupt(ENCA), DC_Motor_Encoder1, RISING);
+//  uint8_t returnStatus = mySensorBar.begin();
+//  pinMode(ENCA, INPUT); // sets the Encoder_output_A pin as the input
+//  pinMode(ENCB, INPUT); // sets the Encoder_output_B pin as the input
+//  attachInterrupt(digitalPinToInterrupt(ENCA), DC_Motor_Encoder1, RISING);
   //   attachInterrupt(digitalPinToInterrupt(ENCB),DC_Motor_Encoder2,RISING);
-//
-//  if (returnStatus)
-//  {
-//    Serial.println("sx1509 IC communication OK");
-//  }
-//  else
-//  {
-//    Serial.println("sx1509 IC communication FAILED!");
-//  }
-//  Serial.println();
-//  
-    
-start_up(5000, 0.1); //this is the function for the autostart.
-    
+  //
+  //  if (returnStatus)
+  //  {
+  //    Serial.println("sx1509 IC communication OK");
+  //  }
+  //  else
+  //  {
+  //    Serial.println("sx1509 IC communication FAILED!");
+  //  }
+  //  Serial.println();
+  //
+
+  start_up(5000, 0.1); //this is the function for the autostart.
+
 }
 
 
 void loop() {
 
- 
 
-  
+
+
   //
   //      Serial.print("Density: ");
   //      Serial.println(mySensorBar.getDensity());
@@ -125,77 +126,93 @@ void loop() {
   //  Serial.println(mySensorBar.getDensity());
 
 
-
-//  forward(70, 5);
-//
-// delay(7000);
-
-//  spinCounter(5);
-  ////the main code
-  
-  //  line_Follow();
-  //  backward(70, 0.35);
-  //  ebreak(500);
-  //  turnLeft(120, 100);
-  //  delay(1000);
-  //  line_Follow();
-  //  backward(70, 0.35);
-  //  ebreak(500);
-  //
-  //  turnLeft(120, 120);
-  //  delay(1000);
-  //  forward(70, 1.5);
-  //  spin(3);
-  //  //line_Follow();
-  //  delay(7000);
-
-
-
   //Backup hardcode
-   
-   //to box drop off
-   forward(70, 2.5);
-   forward(70,1.1);
-   forward(40,0.5);
-   
-   //first turn
-   backward(70,0.8);
-   forward(40,0.1);
-   left(140, 0.7);
-   backward(70,1);
-   
-   //to thruster pick up
-   forward(70,1.2);
-   forward(40,0.7);
-   
-   //seocnd turn
-   backward(70,0.3);
-   forward(40,0.1);
-   left(140, 0.7);
-   backward(70,1);
-   delay(3000);
-   forward(70,0.5);
-   right(140,0.2);
-   backward(70,1.2);
-   delay(10000);
 
+  //to box drop off//
+  forward(80,0.5);
+//  plowServo1.attach(31);
+//  plowServo1.write(180);
+//  plowServo2.attach(35);
+//  plowServo2.write(180);
+//  delay(1000);
+//  plowServo2.write(0);
+//  plowServo2.detach();
+//  plowServo1.write(0);
+//  plowServo1.detach();
+  forward(80, 2);
+  forward(80, 1.1);
+  forward(50, 0.5);
+
+  //first turn
+  backward(80, 0.7);
+  forward(50, 0.1);
+  left(160, 0.7);
+  backward(80, 1);
+//
+//  //to thruster pick up
+  forward(80, 1.2);
+  forward(50, 0.7);
+//
+//  //seocnd turn
+  backward(70, 0.3);
+  forward(50, 0.1);
+  left(160, 0.7);
+  backward(80, 1);
+  delay(3000);
+  forward(80, 0.5);
+  right(160, 0.2);
+  backward(80, 1.3);
+  delay(1000);
+
+
+  //   //to white line
+  forward(80, 1.8);
+  //plowServo1.attach(31);
+//  plowServo1.write(180);
+//  plowServo2.attach(35);
+//  plowServo2.write(180);
+//
+//  plowServo1.detach();
+//  plowServo2.detach();
+//
+
+//  forward(255, 0.5); 
+//  delay(10000);
+//  plowServo2.attach(35);
+//  plowServo2.write(0);
+//  plowServo2.detach();
+//  plowServo1.attach(31);
+//  plowServo1.write(0);
+//  plowServo1.detach();
+  //   forward(80,2.35);
+  //   delay(10000);
+  //
+  //   forward(120,3);
+  //   forward(80,1);
+
+  //hit the button
+
+
+  forward(80, 1.5);
+  right(160, 0.7);
+  backward(70, 0.2);
+  backward(80, 1.2);
+  spinServo.attach(10);
+  spinServo.write(180);
+  delay(1000);
+  spinServo.write(90);
+  spinServo.detach();
  
-//   //to white line
-   forward(70,2.35);
-   delay(10000);
-
-   forward(120,3);
-   forward(70,1);
-
-//hit the button
-
-    
-  forward(70,1.5);
-  right(140,1);
-  backward(70,0.2);
-  backward(70,1.2);
-  forward(70,2);
-  delay(10000);
+  delay(2000);
+   forward(80, 2);
+  while (true) {
+    right(160, 0.3);
+    backward(80, 2);
+    forward(80, 2);
+    left(160, 0.3);
+    backward(80, 2);
+    forward(80, 2);
+  }
 
   //pick up thrusters
   //

@@ -1,7 +1,7 @@
 //the autostart code written by Caleb Dasher
 
-/* Connect SCL    to analog 5
-   Connect SDA    to analog 4
+/* Connect SCL    to 20 (SDA)
+   Connect SDA    to 21 (SCL)
    Connect VDD    to 3.3V DC
    Connect GROUND to common ground */
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);

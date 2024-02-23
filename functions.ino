@@ -32,7 +32,7 @@
 //}
 
 
-
+/*
 void line_Follow() {
   currentDensity = mySensorBar.getDensity(); 
   while ((currentDensity <= 7) or (previousDensity <= 7)) { // While loop to check if yellow line is detected (i.e. normal sequence for yellow line)
@@ -99,7 +99,7 @@ void line_Follow() {
 
 } // End of line_Follow() function
 
-
+*/
 void ebreak(float delay_Time) { //forces the robot to stop moving when called
   
   // turn the motor speed to zero
