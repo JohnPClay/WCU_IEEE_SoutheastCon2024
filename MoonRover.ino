@@ -4,6 +4,7 @@
    For the IEEE SouthEastCon 2024 Hardware Competition
 
 */
+//the extra pins are 40, 48 ,52, A9 and A8 on the PCB
 
 //PINS 20 AND 21 CANNOT BE USED DO TO INTERFERENCE WITH THE SENSOR
 // pins 18 and 19 have a wire stuck in them
@@ -27,6 +28,7 @@ Servo plowServo2;
 
 int StepsPerRev = 2038; // how many steps are in a full revolution
 
+int slavePin = 40; //the pin for communicating with the other arduino
 
 
 int Count_pulses1 = 0;
@@ -85,12 +87,12 @@ void setup() {
   //Default: dark on light
   //mySensorBar.clearInvertBits();
   //Other option: light line on dark
- // mySensorBar.setInvertBits();
+  // mySensorBar.setInvertBits();
   //Don't forget to call .begin() to get the bar ready.  This configures HW.
-//  uint8_t returnStatus = mySensorBar.begin();
-//  pinMode(ENCA, INPUT); // sets the Encoder_output_A pin as the input
-//  pinMode(ENCB, INPUT); // sets the Encoder_output_B pin as the input
-//  attachInterrupt(digitalPinToInterrupt(ENCA), DC_Motor_Encoder1, RISING);
+  //  uint8_t returnStatus = mySensorBar.begin();
+  //  pinMode(ENCA, INPUT); // sets the Encoder_output_A pin as the input
+  //  pinMode(ENCB, INPUT); // sets the Encoder_output_B pin as the input
+  //  attachInterrupt(digitalPinToInterrupt(ENCA), DC_Motor_Encoder1, RISING);
   //   attachInterrupt(digitalPinToInterrupt(ENCB),DC_Motor_Encoder2,RISING);
   //
   //  if (returnStatus)
@@ -129,16 +131,16 @@ void loop() {
   //Backup hardcode
 
   //to box drop off//
-  forward(80,0.5);
-//  plowServo1.attach(31);
-//  plowServo1.write(180);
-//  plowServo2.attach(35);
-//  plowServo2.write(180);
-//  delay(1000);
-//  plowServo2.write(0);
-//  plowServo2.detach();
-//  plowServo1.write(0);
-//  plowServo1.detach();
+  forward(80, 0.5);
+  //  plowServo1.attach(31);
+  //  plowServo1.write(180);
+  //  plowServo2.attach(35);
+  //  plowServo2.write(180);
+  //  delay(1000);
+  //  plowServo2.write(0);
+  //  plowServo2.detach();
+  //  plowServo1.write(0);
+  //  plowServo1.detach();
   forward(80, 2);
   forward(80, 1.1);
   forward(50, 0.5);
@@ -148,12 +150,12 @@ void loop() {
   forward(50, 0.1);
   left(160, 0.7);
   backward(80, 1);
-//
-//  //to thruster pick up
+  //
+  //  //to thruster pick up
   forward(80, 1.2);
   forward(50, 0.7);
-//
-//  //seocnd turn
+  //
+  //  //seocnd turn
   backward(70, 0.3);
   forward(50, 0.1);
   left(160, 0.7);
@@ -168,22 +170,22 @@ void loop() {
   //   //to white line
   forward(80, 1.8);
   //plowServo1.attach(31);
-//  plowServo1.write(180);
-//  plowServo2.attach(35);
-//  plowServo2.write(180);
-//
-//  plowServo1.detach();
-//  plowServo2.detach();
-//
+  //  plowServo1.write(180);
+  //  plowServo2.attach(35);
+  //  plowServo2.write(180);
+  //
+  //  plowServo1.detach();
+  //  plowServo2.detach();
+  //
 
-//  forward(255, 0.5); 
-//  delay(10000);
-//  plowServo2.attach(35);
-//  plowServo2.write(0);
-//  plowServo2.detach();
-//  plowServo1.attach(31);
-//  plowServo1.write(0);
-//  plowServo1.detach();
+  //  forward(255, 0.5);
+  //  delay(10000);
+  //  plowServo2.attach(35);
+  //  plowServo2.write(0);
+  //  plowServo2.detach();
+  //  plowServo1.attach(31);
+  //  plowServo1.write(0);
+  //  plowServo1.detach();
   //   forward(80,2.35);
   //   delay(10000);
   //
@@ -197,14 +199,14 @@ void loop() {
   right(160, 0.7);
   backward(70, 0.2);
   backward(80, 1.2);
-  spinServo.attach(10);
-  spinServo.write(180);
-  delay(1000);
-  spinServo.write(90);
-  spinServo.detach();
- 
+//  spinServo.attach(10);
+//  spinServo.write(180);
+//  delay(1000);
+//  spinServo.write(90);
+//  spinServo.detach();
+
   delay(2000);
-   forward(80, 2);
+  forward(80, 2);
   while (true) {
     right(160, 0.3);
     backward(80, 2);

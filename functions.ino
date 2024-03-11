@@ -325,3 +325,11 @@ void spinCounter(int rotations) { //will spin the sign. it is the code for the c
       CW(A8,A9,A10,A15);
   }
 }
+
+void sendSignal(){
+  digitalWrite(slavePin, HIGH);
+  delay(100);
+  digitalWrite(slavePin, LOW);
+
+
+}
