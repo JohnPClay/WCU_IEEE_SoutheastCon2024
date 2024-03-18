@@ -9,6 +9,8 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS3472
 // returns percent change from one iteration to the next
 float percent_change(int prev, int next)
 {
+   float val = (float(next-prev)/float(prev))*100;
+   Serial.print("Percent change %.3f\n", val);
   return (float(next-prev)/float(prev))*100;
 }
 // returns true of enabled has changed more than the percent change specified
@@ -32,11 +34,13 @@ bool start_light_enabled(float percent_0_to_1)
   if (first_run == 1) {
     //old_red = red_val;
     old_green = green_val;
+     Serial.print("Initial value %d\n", old_green);
     //old_blue = blue_val;
     first_run = 0;
   }
   if (percent_change(old_green, green_val) >= percent_0_to_1)
   {
+     Serial.print("Final value %d\n", green_val);
     return 1;
   }
   else {
