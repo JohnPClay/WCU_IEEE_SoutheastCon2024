@@ -10,7 +10,7 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS3472
 float percent_change(int prev, int next)
 {
    float val = (float(next-prev)/float(prev))*100;
-   Serial.print("Percent change\n);
+   Serial.print("Percent change\n");
    Serial.println(val);
   return (float(next-prev)/float(prev))*100;
 }
