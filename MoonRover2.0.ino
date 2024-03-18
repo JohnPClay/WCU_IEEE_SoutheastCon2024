@@ -39,7 +39,7 @@ int left_Motor_S2 = 36;
 
 void setup() {
   Serial.begin(9600);
-  
+
   start_up(5000, 0.1); //this is the function for the autostart.
 
 }
@@ -47,12 +47,13 @@ void setup() {
 
 void loop() {
 
+
   //Backup hardcode
 
   //pick up blocks//
 
-  //  sendSignal();
-  //  delay(3000);
+    sendSignal();
+    delay(3000);
 
   //to box drop off//
   forward(80, 0.5);
@@ -62,9 +63,10 @@ void loop() {
   forward(50, 0.5);
 
   //drop off boxes
-  
-    //sendSignal();
 
+  sendSignal();
+  delay(1000);
+  
   //first turn
   backward(80, 0.6);
   forward(50, 0.1);
@@ -76,18 +78,18 @@ void loop() {
   forward(80, 0.75);
   forward(60, 0.5);
   forward(50, 0.7);
-  
+
   //  //seocnd turn
   backward(70, 0.2);
   forward(50, 0.1);
   left(160, 0.6);
   backward(80, 1.2);
-  delay(3000);
+  delay(1000);
   //centering before the line
   forward(80, 0.5);
   right(160, 0.1);
   backward(80, 1.4);
-  delay(3000);
+  delay(1000);
 
 
   //   //to white line
@@ -96,11 +98,11 @@ void loop() {
 
 
   forward(255, 0.5);
-  delay(3000);
+  delay(1000);
   //hit the button
 
   forward(80, 0.5);
-  forward(60,1);
+  forward(60, 1);
   right(160, 0.6);
   backward(70, 0.2);
   backward(80, 1.2);

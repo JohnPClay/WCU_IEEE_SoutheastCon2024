@@ -3,15 +3,18 @@
 
 #include "Servo.h"
 #define statePin 2 // connect to master digital output "pin"  
-unsigned int state;
+int state = 0;
 Servo spinServo;
 Servo blockServo;
+int clk = 0;
+
 
 void setup() {
   pinMode(statePin, INPUT);
-  blockServo.write(15); //this is the starting positon for the arm. at 15 degrees it should be upright
-  state = 0;
-  clk = 0;
+  blockServo.attach(7);
+  blockServo.write(170); //this is the starting positon for the arm. at 170 degrees it should be upright
+  
+
   attachInterrupt(digitalPinToInterrupt(statePin), changeState, RISING); // trigger ISR on rising edge of master voltage signal
 
 }
@@ -23,14 +26,14 @@ void loop() {
     if (state == 1) {
       // lower servo motor to grab blocks
       //raise servo motor to lift up blocks
-      blockServo.write(120); // at 120 degrees it lowers to be perpendicular to the staring position to pick up the blocks. if needed increase to 130-140.
-      delay(1200);
-      blockServo.write(55); // the posiion for carying the blocks across the course
+      blockServo.write(80); // at 80 degrees it lowers to be perpendicular to the staring position to pick up the blocks. if needed increase to 70-90.
+      delay(1000);
+      blockServo.write(140); // the posiion for carying the blocks across the course. might need to be changed to 140-165.
       clk == 0;
     }
     if (state == 2) {
       //drop off blocks
-      blockServo.write(0); //raises the arm past the starting position to dsiconeect the blockss
+      blockServo.write(180); //raises the arm past the starting position to dsiconeect the blockss
       clk == 0;
     }
     if (state == 3) {
